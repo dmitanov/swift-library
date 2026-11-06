@@ -25,8 +25,14 @@ public final class HabitStore {
             return URL(fileURLWithPath: override)
         }
 
-        return FileManager.default
-            .homeDirectoryForCurrentUser
+        let home: URL
+        #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+        home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+        #else
+        home = FileManager.default.homeDirectoryForCurrentUser
+        #endif
+
+        return home
             .appendingPathComponent(".habittracker", isDirectory: true)
             .appendingPathComponent("habits.json")
     }
